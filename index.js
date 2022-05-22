@@ -90,6 +90,23 @@ app.post('/signup/userInformation', async (req, res) =>{
     res.send(result);
  })
 
+ // manage Services list is showing on dashboard.
+app.get("/dashboard/manageServices", async (req, res) => {
+  console.log(req.body);
+  const result = await servicesCollection.find({}).toArray();
+  res.send(result);
+  console.log(result);
+});
+
+
+// delete Services from admin dashboard............. ...........
+app.delete("/dashboard/manageServices/deleted/:id", async (req, res) =>{
+  const filter = {_id : ObjectId(req.params.id)};
+  const result = await servicesCollection.deleteOne(filter)
+  res.send(result);
+  console.log(result);
+})
+
  
 
 });
