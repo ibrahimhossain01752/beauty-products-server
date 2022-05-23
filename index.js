@@ -107,6 +107,13 @@ app.delete("/dashboard/manageServices/deleted/:id", async (req, res) =>{
   console.log(result);
 })
 
+// Add Services from admin dashboard...................
+app.post('/dashboard/addService', async (req, res) =>{
+  const result = await servicesCollection.insertOne(req.body);
+  res.send(result);
+  console.log(result);
+ })
+
  
 
 });
