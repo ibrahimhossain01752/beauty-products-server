@@ -114,6 +114,12 @@ app.post('/dashboard/addService', async (req, res) =>{
   console.log(result);
  })
 
+  // review
+  app.post("/addSReview", async (req, res) => {
+    const result = await reviewCollection.insertOne(req.body);
+    res.send(result);
+  });
+
  
 
 });
