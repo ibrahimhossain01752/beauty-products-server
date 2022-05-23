@@ -120,6 +120,20 @@ app.post('/dashboard/addService', async (req, res) =>{
     res.send(result);
   });
 
+   // review
+ app.post("/addSReview", async (req, res) => {
+  const result = await reviewCollection.insertOne(req.body);
+  res.send(result);
+});
+
+
+//Show All Reviews in Ui..................
+app.get("/allReview", async (req, res) => {
+  console.log(req.body);
+  const result = await reviewCollection.find({}).toArray();
+  res.send(result);
+});
+
  
 
 });
