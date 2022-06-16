@@ -33,7 +33,7 @@ client.connect((err) => {
     const productsCollection = client.db("Beauty-Products").collection("Collection");
     const usersCollection = client.db("Beauty-Products").collection("users");
     const ordersCollection = client.db("Beauty-Products").collection("orders");
-    //const reviewCollection = client.db("Toyoya-car").collection("review");
+    const reviewCollection = client.db("Beauty-Products").collection("review");
 
     //place order ..........................
  app.post("/placeorderInsert", async (req, res) => {
@@ -65,12 +65,19 @@ app.post('/signup/userInformation', async (req, res) =>{
 
  //getting all my booking 
 
- app.get("/dashboard/myBooking", async (req, res) =>{
+ /* app.get("/dashboard/myBooking", async (req, res) =>{
     const query = {email: req.body.email};
     const result = await ordersCollection.find(query).toArray;
     console.log(result);
     res.send(result);
- })
+ }) */
+
+ app.get("/dashboard/myBooking", async (req, res) => {
+  const query = { email: req.query.email };
+  const result = await ordersCollection.find(query).toArray();
+  console.log(result);
+  res.send(result);
+});
 
  // delete myBooking for users
 
@@ -81,35 +88,82 @@ app.post('/signup/userInformation', async (req, res) =>{
    console.log(result);
  })
 
- //check admin or not admin
+ //  make admin
+ app.put("/dashboard/makeAdmin", async (req, res) => {
+  const filter = { email: req.body.email };
+  const result = await usersCollection.find(filter).toArray();
+  if (result) {
+    const made = await usersCollection.updateOne(filter, {
+      $set: { role: "admin" },
+    });
+    res.send(made);
+  }
+});
 
- app.get("/checkAdmin/:email", async (req, res) => {
-    const query = {email: req.params.email};
-    const result = usersCollection.find(query).toArray();
+ 
+  // check admin or not...................
+  app.get("/checkAdmin/:email", async (req, res) => {
+    const query = { email: req.params.email };
+    const result = await usersCollection.find(query).toArray();
     console.log(result);
     res.send(result);
- })
+  });
+
 
  // manage Services list is showing on dashboard.
 app.get("/dashboard/manageServices", async (req, res) => {
   console.log(req.body);
-  const result = await servicesCollection.find({}).toArray();
+  const result = await productsCollection.find({}).toArray();
   res.send(result);
   console.log(result);
 });
 
-
 // delete Services from admin dashboard............. ...........
 app.delete("/dashboard/manageServices/deleted/:id", async (req, res) =>{
   const filter = {_id : ObjectId(req.params.id)};
-  const result = await servicesCollection.deleteOne(filter)
+  const result = await productsCollection.deleteOne(filter)
+  res.send(result);
+  console.log(result);
+})
+
+/* =========== */
+// manage order list is showing on dashboard.
+app.get("/dashboard/manageOrder", async (req, res) => {
+  console.log(req.body);
+  const result = await ordersCollection.find({}).toArray();
+  res.send(result);
+  console.log(result);
+});
+
+// Approved Status............. ...........
+app.put("/dashboard/manageOrder/Approved/:id", async (req, res) =>{
+  const filter = {_id : ObjectId(req.params.id)};
+  const result = await ordersCollection.updateOne(filter, {
+      $set: {status: 'Approved'}
+  })
+  res.send(result);
+  console.log(result);
+})
+
+
+// delete Services from admin dashboard............. ...........
+/* app.delete("/dashboard/manageServices/deleted/:id", async (req, res) =>{
+  const filter = {_id : ObjectId(req.params.id)};
+  const result = await productsCollection.deleteOne(filter)
+  res.send(result);
+  console.log(result);
+}) */
+// delete ManageOrders for admin............. ...........
+app.delete("/dashboard/manageOrder/deleted/:id", async (req, res) =>{
+  const filter = {_id : ObjectId(req.params.id)};
+  const result = await ordersCollection.deleteOne(filter)
   res.send(result);
   console.log(result);
 })
 
 // Add Services from admin dashboard...................
 app.post('/dashboard/addService', async (req, res) =>{
-  const result = await servicesCollection.insertOne(req.body);
+  const result = await productsCollection.insertOne(req.body);
   res.send(result);
   console.log(result);
  })
