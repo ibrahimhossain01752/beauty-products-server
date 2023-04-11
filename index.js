@@ -6,13 +6,7 @@ require('dotenv').config();
 const ObjectId = require("mongodb").ObjectId;
 
 const cors = require('cors');
-// const app = express();
-// const port = 5000;
 
-
-//midleware
-// app.use(cors());
-// app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.638jm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -63,14 +57,7 @@ app.post('/signup/userInformation', async (req, res) =>{
  });
 
 
- //getting all my booking 
-
- /* app.get("/dashboard/myBooking", async (req, res) =>{
-    const query = {email: req.body.email};
-    const result = await ordersCollection.find(query).toArray;
-    console.log(result);
-    res.send(result);
- }) */
+ 
 
  app.get("/dashboard/myBooking", async (req, res) => {
   const query = { email: req.query.email };
@@ -146,13 +133,7 @@ app.put("/dashboard/manageOrder/Approved/:id", async (req, res) =>{
 })
 
 
-// delete Services from admin dashboard............. ...........
-/* app.delete("/dashboard/manageServices/deleted/:id", async (req, res) =>{
-  const filter = {_id : ObjectId(req.params.id)};
-  const result = await productsCollection.deleteOne(filter)
-  res.send(result);
-  console.log(result);
-}) */
+
 // delete ManageOrders for admin............. ...........
 app.delete("/dashboard/manageOrder/deleted/:id", async (req, res) =>{
   const filter = {_id : ObjectId(req.params.id)};
